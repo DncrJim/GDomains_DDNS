@@ -1,15 +1,37 @@
 #!/bin/bash
 
-#Syntax of import ddns.sh [domain] [username] [password] [interface(optional)] [IP(optional)] [email(optional)]
+#Any of these items can be entered manually if you prefer
+GDomain=    #Domain name (with or without subdomain),
+Username=   #username from Google Domains control panel
+Password=   #password from Google Domains control panel
+IP=         #Use if you want to manually Set IP
+Email=      #Email where you would like messages sent
 
-#Domain name (with or without subdomain), username/password from Google Domains control panel
-#Any of these items can also be entered manually if you prefer
-GDomain=
-Username=
-Password=
-Interface=
-IP=
-Email=
+#Syntax of import ddns.sh -d [domain] -u [username] -p [password] -i [IP] -e [email]
+while getopts d:u:p:i:e: option
+do
+  case "${option}"
+    in
+    d) GDomain=${OPTARG};;
+    u) Username=${OPTARG};;
+    p) Password=${OPTARG};;
+    i) IP=${OPTARG};;
+    e) Email=${OPTARG};;
+  esac
+done
+
+#Select when you would like to receive emails 0=no 1=yes
+EmailonMatches=0  #Email if script finds that current IP and GDomain IP already match
+EmailonSuccess=1  #Email if script tries to change IP and API says good
+EmailonFailure=1  #Email if script tries to change IP and API says anything other than good
+
+#Verify Required Data (Domain, Username Password)
+if [[ -z "$GDomain" ]] && { echo "GDomain not provided"; exit 1; }
+if [[ -z "$Username" ]] && { echo "Username not provided"; exit 1; }
+if [[ -z "$GDomain" ]] && { echo "Password not provided"; exit 1; }
+
+#Get Interface Name
+Interface=$(ip route get 1.1.1.1 | grep -Po '(?<=dev\s)\w+' | cut -f1 -d ' ')
 
 #Pull WAN IP from the network interface. Should work no matter if appliance is directly connected or through router
 #Commented out line is separate option if first one breaks or you don't have awk on your system
