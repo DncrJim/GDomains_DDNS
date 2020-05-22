@@ -1,0 +1,17 @@
+#To install as recurring check:
+
+$crontab -e
+
+#This check runs every 5 minutes
+
+
+#If you want to run an additional check 90 seconds after bootup, copy in this as well
+
+
+#Alternatively you can simply delay the first run by xx seconds
+
+
+#save and exit crontab
+
+$service cron restart (or)
+$service cron reload
