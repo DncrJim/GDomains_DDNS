@@ -19,11 +19,7 @@ $service cron reload
 
 
 Optional Extra:
-<<<<<<< HEAD
 If you don't want to set up port forwarding manually on your router, you can have your device punch its own hole through the firewall to direct at itself assuming it is not disabled on the router
-=======
-In case your router does something stupid, have your device set up its own port forwarding (assuming the router permits it)
->>>>>>> 16925d74fca40ca7a396eeb6d53af3c0b3c80cb2
 requires miniupnpc on device
 
 @reboot sleep 30 && upnpc -e '<name that will display on router>' -r <port number> (optional external port) TCP
