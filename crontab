@@ -1,17 +1,18 @@
 #To install as recurring check:
 
+#Don't forget to make file executable
+chmod +x /path/to/file/ddns.sh
+
 $crontab -e
 
-#This check runs every 5 minutes
+#This check runs every 10 minutes
+*/10 * * * * /bin/bash /path/to/file/ddns.sh
 
-
-#If you want to run an additional check 90 seconds after bootup, copy in this as well
-
-
-#Alternatively you can simply delay the first run by xx seconds
-
+#If you want to run the update 90 seconds after bootup
+@reboot sleep 90 && /bin/bash /path/to/file/ddns.sh
 
 #save and exit crontab
 
-$service cron restart (or)
+#restart crontab service to ensure proper running
+$service cron restart (or?)
 $service cron reload
