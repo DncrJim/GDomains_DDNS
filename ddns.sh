@@ -27,6 +27,9 @@ EmailonMatches=0  #Email if script finds that current IP and GDomain IP already 
 EmailonSuccess=1  #Email if script tries to change IP and API says good
 EmailonFailure=1  #Email if script tries to change IP and API says anything other than good
 
+#Stop emails from sending if no email has been provided.
+if [[ -z $Email ]] && { EmailonMatches=0 ; EmailonSuccess=0 ; EmailonFailure=0 ; }
+
 #Verify Required Data (Domain, Username Password)
 if [[ -z $GDomain ]] && { echo "GDomain not provided"; exit 1; }
 if [[ -z $Username ]] && { echo "Username not provided"; exit 1; }
