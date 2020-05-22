@@ -6,13 +6,21 @@ chmod +x /path/to/file/ddns.sh
 $crontab -e
 
 #This check runs every 10 minutes
-*/10 * * * * /bin/bash /path/to/file/ddns.sh
+*/10 * * * * /bin/bash /path/to/file/ddns.sh -d <domain> -u <username> -p <password> (-i <ip> -e <email>)
 
 #If you want to run the update 90 seconds after bootup
-@reboot sleep 90 && /bin/bash /path/to/file/ddns.sh
+@reboot sleep 90 && /bin/bash /path/to/file/ddns.sh -d <domain> -u <username> -p <password> (-i <ip> -e <email>)
 
 #save and exit crontab
 
 #restart crontab service to ensure proper running
 $service cron restart (or?)
 $service cron reload
+
+
+Optional Extra:
+If you don't want to set up port forwarding manually on your router, you can have your device punch its own hole through the firewall to direct at itself assuming it is not disabled on the router
+requires miniupnpc on device
+
+@reboot sleep 30 && upnpc -e '<name that will display on router>' -r <port number> (optional external port) TCP
+*/10 * * * * upnpc -e '<name that will display on router>' -r <port number> (optional external port) TCP
