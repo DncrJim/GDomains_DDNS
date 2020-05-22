@@ -36,15 +36,20 @@ if [[ -z $Username ]] && { echo "Username not provided"; exit 1; }
 if [[ -z $GDomain ]] && { echo "Password not provided"; exit 1; }
 
 #Get Interface Name
-Interface=$(ip route get 1.1.1.1 | grep -Po '(?<=dev\s)\w+' | cut -f1 -d ' ')
+Interface=$(ip route get 1.1.1.1 | awk '{print$5}')
+      #2nd option if first one doesn't work
+      #Interface=$(ip route get 1.1.1.1 | grep -Po '(?<=dev\s)\w+' | cut -f1 -d ' ')
 
 #If a new IP is not provided, Pull WAN IP from the network interface. Should work if appliance is directly connected or through router
-if [[ -z $NewIP ]] && {NewIP=$(host myip.opendns.com resolver1.opendns.com | grep "myip.opendns.com has" | awk '{print $4}'); }
-#The following line is a second option if first one breaks or you don't have awk on your system
-#if [[ -z $NewIP ]] && {NewIP=$(wget -qO - icanhazip.com); }
+if [[ -z $NewIP ]] && {NewIP=$(wget -qO - icanhazip.com); }
+      #2nd option if first one doesn't work
+      #if [[ -z $NewIP ]] && {NewIP=$(host myip.opendns.com resolver1.opendns.com | grep "myip.opendns.com has" | awk '{print $4}'); }
 
 #Current IP of Google Domain
-GDIP=$(host $MyGDomain | awk '/has address/ { print $4 ; exit }')
+
+GDIP=$(nslookup $GDomain | awk 'FNR ==5 {print$3}')
+      #2nd option if first one doesn't work
+      #GDIP=$(host $GDomain | awk '/has address/ { print $4 ; exit }')
 
 #If WAN IP and GDomain IP are the same, log, optionally send email, and exit
 if [ "$NewIP" == "$GDIP" ]; then

@@ -22,10 +22,12 @@ the first three variables are required, either via
 
 * [x] fix to import variables
 * [ ] fix possible problem where it sends error email even when response from API is good
+* [x] fix that interface lookup uses grep -P, not available on all systems
+* [x] remove use of 'host', not available on all systems
 * [x] set up so that some variables are optional
 * [ ] verify inputs
   * [x] verify non null
   * [ ] verify correct syntax
 * [x] set up option for interface to be discovered dynamically
-* [ ] reset variables for email to 0 if no email is provided
+* [x] reset variables for email to 0 if no email is provided
 * [ ] update readme (hehe)
