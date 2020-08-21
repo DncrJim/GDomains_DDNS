@@ -35,15 +35,27 @@ if [[ -z $GDomain ]]; then echo "GDomain not provided"; exit 1; fi
 if [[ -z $Username ]]; then echo "Username not provided"; exit 1; fi
 if [[ -z $Password ]]; then echo "Password not provided"; exit 1; fi
 
+#Get Interface Name
+Interface=$(ip route get 1.1.1.1 | awk '{print$5}')
+      #2nd option if first one doesn't work
+      #Interface=$(ip route get 1.1.1.1 | grep -Po '(?<=dev\s)\w+' | cut -f1 -d ' ')
+
 #If a new IP is not provided, Pull WAN IP from the network interface. Should work if appliance is directly connected or through router
 if [[ -z $NewIP ]]; then NewIP=$(host myip.opendns.com resolver1.opendns.com | grep "myip.opendns.com has" | awk '{print $4}'); fi
       #2nd option if first one doesn't work
       #if [[ -z $NewIP ]]; then NewIP=$(wget -qO - icanhazip.com); fi
 
+      #exit and throw error if new IP is still blank
+      if [[ -z $NewIP ]]; then echo "DDNS for $GDomain was not able to automatically resolve the WAN IP and none was provided." | mail -s "DDNS for $GDomain Update ::ERROR::" "$Email"
+              exit; fi
+
 #Current IP of Google Domain
 GDIP=$(host $GDomain | awk '/has address/ { print $4 ; exit ; }')
       #2nd option if first one doesn't work
       #GDIP=$(nslookup $GDomain | awk 'FNR ==5 {print$3}')
+
+      if [[ -z $GDIP ]]; then echo "DDNS for $GDomain was not able to resolve the current GDomain IP." | mail -s "DDNS for $GDomain Update ::ERROR::" "$Email"
+              exit; fi
 
 #If WAN IP and GDomain IP are the same, log, optionally send email, and exit
 if [[ "$NewIP" == "$GDIP" ]]; then

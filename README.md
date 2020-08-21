@@ -30,4 +30,5 @@ the first three variables are required, either via
   * [ ] verify correct syntax
 * [x] set up option for interface to be discovered dynamically
 * [x] reset variables for email to 0 if no email is provided
+* [ ] update code so that when email is not provided, error in resolving IP emails are not sent
 * [ ] update readme (hehe)

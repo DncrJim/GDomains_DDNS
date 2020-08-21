@@ -1,26 +1,33 @@
 #!/bin/sh
 
 #Any of these items can be entered manually if you prefer
-GDomain=falk.dncrjim.com    #Domain name (with or without subdomain),
-Username=4U0BCYYADpC1Q2ZW   #username from Google Domains control panel
-Password=jgX9pY8MKPzx4l7w   #password from Google Domains control panel
-Email=dncrjim@gmail.com     #Email where you would like messages sent
+GDomain=    #Domain name (with or without subdomain),
+Username=   #username from Google Domains control panel
+Password=   #password from Google Domains control panel
+IP=         #Use if you want to manually Set IP
+Email=      #Email where you would like messages sent
 
 #Syntax of import ddns.sh -d [domain] -u [username] -p [password] -i [IP] -e [email]
 #Domain, Username, and Password are requred.
 #If not provided,
 
 #Select when you would like to receive emails 0=no 1=yes
-EmailonMatches=1  #Email if script finds that current IP and GDomain IP already match
+EmailonMatches=0  #Email if script finds that current IP and GDomain IP already match
 EmailonSuccess=1  #Email if script tries to change IP and API says good
 EmailonFailure=1  #Email if script tries to change IP and API says anything other than good
-
 
 #If a new IP is not provided, Pull WAN IP from the network interface. Should work if appliance is directly connected or through router
 NewIP=$(wget -qO - icanhazip.com)
 
+  #exit and email error if new IP is still blank
+  if [[ -z $NewIP ]]; then echo "DDNS for $GDomain was not able to automatically resolve the WAN IP and none was provided." | mail -s "DDNS for $GDomain Update ::ERROR::" "$Email"
+        exit; fi
 #Current IP of Google Domain
 GDIP=$(nslookup $GDomain | awk 'FNR ==5 {print$3}')
+
+  #exit and email error if GDomain IP is still blank
+  if [[ -z $GDIP ]]; then echo "DDNS for $GDomain was not able to resolve the current GDomain IP." | mail -s "DDNS for $GDomain Update ::ERROR::" "$Email"
+        exit; fi
 
 #If WAN IP and GDomain IP are the same, log, optionally send email, and exit
 if [[ "$NewIP" == "$GDIP" ]]; then
