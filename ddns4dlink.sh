@@ -1,49 +1,26 @@
-#!/bin/bash
+#!/bin/sh
 
 #Any of these items can be entered manually if you prefer
-GDomain=    #Domain name (with or without subdomain),
-Username=   #username from Google Domains control panel
-Password=   #password from Google Domains control panel
-IP=         #Use if you want to manually Set IP
-Email=      #Email where you would like messages sent
+GDomain=falk.dncrjim.com    #Domain name (with or without subdomain),
+Username=4U0BCYYADpC1Q2ZW   #username from Google Domains control panel
+Password=jgX9pY8MKPzx4l7w   #password from Google Domains control panel
+Email=dncrjim@gmail.com     #Email where you would like messages sent
 
 #Syntax of import ddns.sh -d [domain] -u [username] -p [password] -i [IP] -e [email]
 #Domain, Username, and Password are requred.
 #If not provided,
-while getopts d:u:p:i:e: option
-do
-  case "${option}"
-    in
-    d) GDomain=${OPTARG};;
-    u) Username=${OPTARG};;
-    p) Password=${OPTARG};;
-    i) NewIP=${OPTARG};;
-    e) Email=${OPTARG};;
-  esac
-done
 
 #Select when you would like to receive emails 0=no 1=yes
-EmailonMatches=0  #Email if script finds that current IP and GDomain IP already match
+EmailonMatches=1  #Email if script finds that current IP and GDomain IP already match
 EmailonSuccess=1  #Email if script tries to change IP and API says good
 EmailonFailure=1  #Email if script tries to change IP and API says anything other than good
 
-#Stop emails from sending if no email has been provided.
-if [[ -z $Email ]]; then EmailonMatches=0 ; EmailonSuccess=0 ; EmailonFailure=0 ; fi
-
-#Verify Required Data (Domain, Username Password)
-if [[ -z $GDomain ]]; then echo "GDomain not provided"; exit 1; fi
-if [[ -z $Username ]]; then echo "Username not provided"; exit 1; fi
-if [[ -z $Password ]]; then echo "Password not provided"; exit 1; fi
 
 #If a new IP is not provided, Pull WAN IP from the network interface. Should work if appliance is directly connected or through router
-if [[ -z $NewIP ]]; then NewIP=$(host myip.opendns.com resolver1.opendns.com | grep "myip.opendns.com has" | awk '{print $4}'); fi
-      #2nd option if first one doesn't work
-      #if [[ -z $NewIP ]]; then NewIP=$(wget -qO - icanhazip.com); fi
+NewIP=$(wget -qO - icanhazip.com)
 
 #Current IP of Google Domain
-GDIP=$(host $GDomain | awk '/has address/ { print $4 ; exit ; }')
-      #2nd option if first one doesn't work
-      #GDIP=$(nslookup $GDomain | awk 'FNR ==5 {print$3}')
+GDIP=$(nslookup $GDomain | awk 'FNR ==5 {print$3}')
 
 #If WAN IP and GDomain IP are the same, log, optionally send email, and exit
 if [[ "$NewIP" == "$GDIP" ]]; then
