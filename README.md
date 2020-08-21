@@ -18,13 +18,9 @@ If no ip address is provided, script will attempt to find the WAN ip through the
 If no email is provided, script will still log messages, but will obviously not be able to email them.
 
 variables set via flags take priority over any variables inserted in the code
-the first three variables are required, either via
+the first three variables are required either through flag or insertion in script, and will throw an error if missing
 
-* [x] fix to import variables
 * [ ] fix possible problem where it sends error email even when response from API is good
-* [x] fix that interface lookup uses grep -P, not available on all systems
-* [x] remove use of 'host', not available on all systems
-* [x] set up so that some variables are optional
 * [ ] verify inputs
   * [x] verify non null
   * [ ] verify correct syntax

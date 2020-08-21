@@ -45,7 +45,7 @@ if [[ -z $NewIP ]]; then NewIP=$(host myip.opendns.com resolver1.opendns.com | g
       #2nd option if first one doesn't work
       #if [[ -z $NewIP ]]; then NewIP=$(wget -qO - icanhazip.com); fi
 
-      #exit and throw error if new IP is still blank
+  #exit and email error if new IP is still blank
       if [[ -z $NewIP ]]; then echo "DDNS for $GDomain was not able to automatically resolve the WAN IP and none was provided." | mail -s "DDNS for $GDomain Update ::ERROR::" "$Email"
               exit; fi
 
@@ -54,6 +54,7 @@ GDIP=$(host $GDomain | awk '/has address/ { print $4 ; exit ; }')
       #2nd option if first one doesn't work
       #GDIP=$(nslookup $GDomain | awk 'FNR ==5 {print$3}')
 
+    #exit and email error if GDomain IP is still blank
       if [[ -z $GDIP ]]; then echo "DDNS for $GDomain was not able to resolve the current GDomain IP." | mail -s "DDNS for $GDomain Update ::ERROR::" "$Email"
               exit; fi
 
