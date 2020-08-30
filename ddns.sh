@@ -41,9 +41,9 @@ Interface=$(ip route get 1.1.1.1 | awk '{print$5}')
       #Interface=$(ip route get 1.1.1.1 | grep -Po '(?<=dev\s)\w+' | cut -f1 -d ' ')
 
 #If a new IP is not provided, Pull WAN IP from the network interface. Should work if appliance is directly connected or through router
-if [[ -z $NewIP ]]; then NewIP=$(host myip.opendns.com resolver1.opendns.com | grep "myip.opendns.com has" | awk '{print $4}'); fi
-      #2nd option if first one doesn't work
-      #if [[ -z $NewIP ]]; then NewIP=$(wget -qO - icanhazip.com); fi
+if [[ -z $NewIP ]]; then NewIP=$(wget -qO - icanhazip.com); fi
+      #2nd option, seems to have stopped working 2020.08.30
+      #if [[ -z $NewIP ]]; then NewIP=$(host myip.opendns.com resolver1.opendns.com | grep "myip.opendns.com has" | awk '{print $4}'); fi
 
   #exit and email error if new IP is still blank
       if [[ -z $NewIP ]]; then echo "DDNS for $GDomain was not able to automatically resolve the WAN IP and none was provided." | mail -s "DDNS for $GDomain Update ::ERROR::" "$Email"
