@@ -1,6 +1,7 @@
 #!/bin/bash
 
 #Any of these items can be entered manually if you prefer
+#Variables do not require quotes
 GDomain=    #Domain name (with or without subdomain),
 Username=   #username from Google Domains control panel
 Password=   #password from Google Domains control panel
